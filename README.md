@@ -106,7 +106,58 @@ To define a database config you can use the phpmyadmin_db LWRP such as:
 		hide_dbs %w{ information_schema mysql phpmyadmin performance_schema }
 	end
 
-This will create a file in /opt/phpmyadmin/conf.d/test_db.inc.php and will be automatically included when you display the PMA page.
+Quickstart without using FPM (Apache 2.4, Ubuntu 14.04)
+=======================================================
+
+* Setup Apache2 in prefork mode, disable fpm
+
+	default['phpmyadmin']['fpm'] = false   
+    default['apache']['mpm'] = 'prefork' # force it
+    default['apache']['listen_ports'] = %w(80 81 443) # port 81 added for example virtual host
+    
+    include_recipe 'apache2::default'
+    include_recipe "php::default"
+    include_recipe "php::apache2"
+    include_recipe "phpmyadmin::default"
+    
+* Create a virtual host template (on port 81 as an example, newer apache versions (Require all granted))
+
+	<VirtualHost *:81>
+	  DocumentRoot /opt/phpmyadmin
+	
+	  <Directory /opt/phpmyadmin>
+		Options FollowSymLinks
+		AllowOverride All
+		Require all granted
+	
+	  </Directory>
+	
+	</VirtualHost>
+	
+* Create the server config file and virtual host 
+
+	# use 127.0.0.1, easier to work when using mysql instances (default for mysql cookbook)
+	phpmyadmin_db 'Test DB' do
+	  host '127.0.0.1'
+	  port 3306
+	  username 'root'
+	  password root_password_data_bag_item['password']
+	  auth_type 'cookie'
+	  hide_dbs %w{ information_schema mysql phpmyadmin performance_schema }
+	end
+	
+	web_app "phpmyadmin" do
+	  template "phpmyadmin.conf.erb"
+	end
+	
+	# if needed, in cookbook firewall
+	firewall_rule 'http' do
+	  port 81
+	  protocol :tcp
+	  action :allow
+	end
+	
+* Go to <server>:81 to login your server.
 
 License
 =======
