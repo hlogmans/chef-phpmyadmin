@@ -157,7 +157,7 @@ Quickstart without using FPM (Apache 2.4, Ubuntu 14.04)
 	  action :allow
 	end
 ````	
-* Go to `<server>:81` to login your server.
+* Go to <server>:81 to login your server.
 
 License
 =======
