@@ -111,17 +111,19 @@ Quickstart without using FPM (Apache 2.4, Ubuntu 14.04)
 
 * Setup Apache2 in prefork mode, disable fpm
 
+````
 	default['phpmyadmin']['fpm'] = false   
-    default['apache']['mpm'] = 'prefork' # force it
-    default['apache']['listen_ports'] = %w(80 81 443) # port 81 added for example virtual host
-    
-    include_recipe 'apache2::default'
-    include_recipe "php::default"
-    include_recipe "php::apache2"
-    include_recipe "phpmyadmin::default"
+	default['apache']['mpm'] = 'prefork' # force it
+	default['apache']['listen_ports'] = %w(80 81 443) # port 81 added for example virtual host
+	
+	include_recipe 'apache2::default'
+	include_recipe "php::default"
+	include_recipe "php::apache2"
+	include_recipe "phpmyadmin::default"
+````    
     
 * Create a virtual host template (on port 81 as an example, newer apache versions (Require all granted))
-
+````
 	<VirtualHost *:81>
 	  DocumentRoot /opt/phpmyadmin
 	
@@ -133,9 +135,9 @@ Quickstart without using FPM (Apache 2.4, Ubuntu 14.04)
 	  </Directory>
 	
 	</VirtualHost>
-	
+````	
 * Create the server config file and virtual host 
-
+````
 	phpmyadmin_db 'Test DB' do
 	  host '127.0.0.1' # use 127.0.0.1 instead of localhost, easier to work with mysql-instances.
 	  port 3306
@@ -154,7 +156,7 @@ Quickstart without using FPM (Apache 2.4, Ubuntu 14.04)
 	  protocol :tcp
 	  action :allow
 	end
-	
+````	
 * Go to <server>:81 to login your server.
 
 License
