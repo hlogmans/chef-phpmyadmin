@@ -136,9 +136,8 @@ Quickstart without using FPM (Apache 2.4, Ubuntu 14.04)
 	
 * Create the server config file and virtual host 
 
-	# use 127.0.0.1, easier to work when using mysql instances (default for mysql cookbook)
 	phpmyadmin_db 'Test DB' do
-	  host '127.0.0.1'
+	  host '127.0.0.1' # use 127.0.0.1 instead of localhost, easier to work with mysql-instances.
 	  port 3306
 	  username 'root'
 	  password root_password_data_bag_item['password']
@@ -150,7 +149,6 @@ Quickstart without using FPM (Apache 2.4, Ubuntu 14.04)
 	  template "phpmyadmin.conf.erb"
 	end
 	
-	# if needed, in cookbook firewall
 	firewall_rule 'http' do
 	  port 81
 	  protocol :tcp
